@@ -155,6 +155,22 @@ grep -v "^>" tga1-protein.fasta | grep --color "[^GPSTVEF]"
 
 ## 7. Inspecting Annotation Files (GTF)
 
+## Downloading GTF Files from Public Repositories
+
+The gene annotation file used in this project was downloaded directly via the Unix command line from a public repository. Downloading reference data using the terminal ensures reproducibility and avoids manual file handling.
+
+```bash
+# Create a directory for reference files
+mkdir -p data/reference
+cd data/reference
+
+# Download the mouse GTF file from Ensembl
+wget ftp://ftp.ensembl.org/pub/release-75/gtf/mus_musculus/Mus_musculus.GRCm38.75.gtf.gz
+
+# Unzip the downloaded file
+gunzip Mus_musculus.GRCm38.75.gtf.gz
+
+
 ### Viewing Large Files
 
 ```bash
