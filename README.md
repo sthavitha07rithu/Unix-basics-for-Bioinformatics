@@ -1,89 +1,90 @@
-# Unix-basics-for-Bioinformatics
-This repository documents Unix command-line concepts and tools learned during the STCC course. It focuses on file system navigation, command chaining, and practical use-cases relevant to bioinformatics workflows.
-
 # STCC Mini Project: Unix Basics for Bioinformatics
 
 ## Overview
 
-This repository documents Unix command-line concepts and tools learned during the STCC course. The focus is on file system navigation, command execution, command chaining, and practical use-cases relevant to bioinformatics and genomic data analysis workflows.
+This repository documents Unix and Git command-line concepts learned during the STCC course, with an emphasis on their application in bioinformatics and genomic data analysis workflows. The material covers Unix file system navigation, text processing, command chaining, data inspection, and version control using Git and GitHub.
 
-The material is organized by conceptual topics rather than lecture order, to emphasize understanding, reproducibility, and real-world applicability.
+The README is written as a clear guide that can be reused and understood by others, rather than just a list of commands, and follows good bioinformatics documentation practices.
 
 ---
 
 ## Learning Objectives
 
-By completing and documenting this project, I demonstrate the ability to:
+By completing this mini project, I demonstrate the ability to:
 
-* Navigate Unix file systems confidently
-* Execute and combine Unix commands for data inspection and manipulation
-* Understand how Unix tools integrate into bioinformatics pipelines
-* Use GitHub as a professional documentation and learning space
+* Navigate Unix/Linux file systems confidently
+* Manipulate and inspect biological data files using standard Unix utilities
+* Chain commands using pipes and redirection
+* Understand common bioinformatics file formats (FASTA, GTF, BED, tabular text)
+* Use Git and GitHub for version control and collaborative research
 
 ---
 
+## Data Availability
+
+Small example FASTA and TXT files used to demonstrate Unix commands are provided in the directory.
+Large reference files (e.g., Mus_musculus.GRCm38.75.gtf) are intentionally not stored in this repository and should be downloaded from official sources.
+
+
 ## 1. Unix File System Navigation
 
-### Key Commands
-
 ```bash
-pwd        # Show the present working directory
+pwd        # Show current working directory
 ls         # List files and directories
-ls -l      # List files with detailed information
+ls -l      # Detailed listing
 cd data/   # Change directory
-cd ..      # Move one level up in the directory hierarchy
+cd ..      # Move one directory up
 ```
 
-### Notes
+**Key points**
 
-* Unix is **case-sensitive**.
-* Absolute paths start from the root directory `/`.
-* Relative paths depend on the current working directory.
+* Unix is case-sensitive.
+* Absolute paths start from `/`, while relative paths depend on the current directory.
 
 ---
 
 ## 2. Creating and Managing Files and Directories
 
-### Directory and File Creation
+### Creating files and directories
 
 ```bash
-mkdir test-project      # Create a new directory
-touch random.csv        # Create an empty file
+mkdir test-project
+touch random.csv
 ```
 
-### Writing and Viewing File Contents
+### Writing to and viewing files
 
 ```bash
-echo "Hello World" > random.csv    # Write text (overwrite)
-echo "Hello India" >> random.csv   # Append text
-cat random.csv                      # Display file contents
+echo "Hello World" > random.csv
+echo "Hello India" >> random.csv
+cat random.csv
 ```
 
-### Copying, Moving, and Renaming
+### Copying, moving, and renaming
 
 ```bash
-cp demo_1/random.csv -t demo_2   # Copy file to target directory
-mv demo_1/random.csv demo_2      # Move file
-mv demo_2 test                   # Rename directory
+cp demo_1/random.csv -t demo_2
+mv demo_1/random.csv demo_2
+mv demo_2 test
 ```
 
-### Deleting Files and Directories
+### Deleting files and directories
 
 ```bash
-rmdir empty_dir     # Delete empty directory
-rm file.txt         # Delete a file
-rm -rf test         # Force delete directory with contents
+rmdir empty_dir
+rm file.txt
+rm -rf test
 ```
 
-**Important:** Unix deletions are permanent. There is no recycle bin.
+**Note:** File deletion in Unix is permanent; there is no recycle bin.
 
 ---
 
-## 3. Getting Help and Command History
+## 3. Getting Help and Tracking Commands
 
 ```bash
-man ls        # Open the manual page for a command
-history       # List commands used in the current session
+man ls        # Command manual
+history       # List previously executed commands
 ```
 
 Manual pages are essential for understanding command options and correct usage.
@@ -92,14 +93,14 @@ Manual pages are essential for understanding command options and correct usage.
 
 ## 4. Pattern Matching and File Subsetting
 
-### Brace Expansion
+### Brace expansion
 
 ```bash
 echo languages-{python,r,rust}
 touch sample{A,B,C}_R{1,2}.fastq
 ```
 
-### Wildcards and Ranges
+### Wildcards and ranges
 
 ```bash
 ls sampleA*
@@ -107,77 +108,48 @@ ls sample[AB]_R1.fastq
 ls sample[A-C]_R1.fastq
 ```
 
-These patterns are especially useful when working with multiple sequencing files.
+These patterns are commonly used when handling multiple sequencing files.
 
 ---
 
-## 5. Streaming and Redirection
+## 5. Streaming, Redirection, and Pipes
 
-### Streaming
+### Streaming large files
 
-In Unix-like systems, a *stream* is a flow of data from a source to a destination. Streaming allows inspection of large biological files without loading them entirely into memory.
+Streaming allows inspection of large biological files without loading them entirely into memory.
 
 ```bash
-cat tb1_protein.fasta
-tb1.fasta
+cat tb1_protein.fasta tb1.fasta
 ```
 
-### Output Redirection
+### Output redirection
 
 ```bash
 cat tb1_protein.fasta tb1.fasta > combined.fasta
 cat tga1-protein.fasta abc.fasta > combined.fasta 2> combined.stderr
 ```
 
-Redirection operators:
+### Pipes
 
-* `>` overwrite output
-* `>>` append output
-* `2>` redirect error messages
-
----
-
-## 6. Pipes and Command Chaining
-
-A pipe (`|`) sends the output of one command directly as input to the next.
+A pipe (`|`) sends the output of one command as input to the next.
 
 ```bash
 grep -v "^>" tga1-protein.fasta | grep --color "[^GPSTVEF]"
 ```
 
-### Bioinformatics Context
-
-* Removes FASTA headers
-* Highlights unexpected amino acids in protein sequences
-* Demonstrates modular, readable command chaining
+This example removes FASTA headers and highlights unexpected amino acids in protein sequences.
 
 ---
 
-## 7. Inspecting Annotation Files (GTF)
+## 6. Inspecting and Querying GTF Annotation Files
 
-## Downloading GTF Files from Public Repositories
-
-The gene annotation file used in this project was downloaded directly via the Unix command line from a public repository. Downloading reference data using the terminal ensures reproducibility and avoids manual file handling.
-
-```bash
-# Create a directory for reference files
-mkdir -p data/reference
-cd data/reference
-
-# Download the mouse GTF file from Ensembl
-wget ftp://ftp.ensembl.org/pub/release-75/gtf/mus_musculus/Mus_musculus.GRCm38.75.gtf.gz
-
-# Unzip the downloaded file
-gunzip Mus_musculus.GRCm38.75.gtf.gz
-
-
-### Viewing Large Files
+### Viewing large annotation files
 
 ```bash
 cat Mus_musculus.GRCm38.75.gtf | less
 ```
 
-### Inspecting File Content
+### Inspecting file content
 
 ```bash
 head Mus_musculus.GRCm38.75.gtf
@@ -185,16 +157,14 @@ head -n 20 Mus_musculus.GRCm38.75.gtf
 tail Mus_musculus.GRCm38.75.gtf
 ```
 
-### Searching for Specific Features
+### Searching for specific gene IDs
 
 ```bash
 grep 'gene_id "ENSMUSG00000095742"' Mus_musculus.GRCm38.75.gtf
 grep -o 'gene_id "ENSMUSG00000095742"' Mus_musculus.GRCm38.75.gtf
 ```
 
----
-
-## 8. Counting and Summarizing Data
+### Counting occurrences
 
 ```bash
 grep 'gene_id "ENSMUSG00000095742"' Mus_musculus.GRCm38.75.gtf | wc
@@ -203,29 +173,162 @@ grep 'gene_id "ENSMUSG00000095742"' Mus_musculus.GRCm38.75.gtf | wc
 Selective counts:
 
 ```bash
-wc -l   # number of lines
-wc -w   # number of words
-wc -m   # number of characters
+wc -l   # lines
+wc -w   # words
+wc -m   # characters
 ```
-
-These commands are commonly used to quantify features, reads, or records in genomic files.
 
 ---
 
-## 9. Reproducible and Robust Research Practices
+## 7. Version Control with Git and GitHub
 
-### Reproducible Research
+### Git configuration and SSH setup
+
+```bash
+git config --global user.name "your-username"
+git config --global user.email "your-email"
+ssh-keygen -t rsa -b 4096 -C "your-email"
+```
+
+The public SSH key (`id_rsa.pub`) is added to the GitHub account for secure authentication.
+
+### Basic Git workflow
+
+```bash
+git init
+git add filename
+git commit -m "commit message"
+git status
+git diff
+git log
+```
+
+### Undoing changes
+
+```bash
+git restore filename
+git restore --staged filename
+git rm -f filename
+git mv oldname newname
+```
+
+### Ignoring files
+
+```bash
+touch .gitignore
+echo "sample.fastq" >> .gitignore
+git add .gitignore
+git commit -m "Add gitignore"
+```
+
+### Pushing to and pulling from GitHub
+
+```bash
+git remote add origin <repository-url>
+git branch -M master
+git push origin master
+git pull origin master
+```
+
+---
+
+## 8. Working with Tabular and Genomic File Formats
+
+### BED files
+
+```bash
+head chr20_100kb_windows.bed
+tail chr20_100kb_windows.bed
+head -n 5 chr20_100kb_windows.bed
+(head -n 3 < chr20_100kb_windows.bed; tail -n 3 < chr20_100kb_windows.bed)
+```
+
+### Cutting and formatting columns
+
+```bash
+cut -f 2 chr20_100kb_windows.bed | head -n 3
+grep -v "^#" Mus_musculus.GRCm38.75.gtf | cut -f1,4,5 | head -n 3
+```
+
+Aligning output for readability:
+
+```bash
+grep -v "^#" Mus_musculus.GRCm38.75.gtf | cut -f1-8 | head -n 3 | column -t
+```
+
+### Grep pattern matching
+
+```bash
+grep "MLPH" genes.txt
+grep ENSG000001 genes.txt
+grep ENSG000001 genes.txt | grep -v "ENSG00000173467"
+```
+
+Context options:
+
+```bash
+grep -B1 "TACTTG" SRR15006374_1.fastq
+grep -A2 "TACTTG" SRR15006374_1.fastq
+```
+
+Regular expressions:
+
+```bash
+grep "FOX[AC]" genes.txt
+grep -E "(FOXC|FOXA)" genes.txt
+grep -c "FOXC" genes.txt
+```
+
+---
+
+## 9. Sorting, Uniqueness, and Pipelines
+
+```bash
+sort letters.txt | uniq
+sort letters.txt | uniq -c
+```
+
+Sorting by columns:
+
+```bash
+sort -k1,1 file.txt
+sort -k2,2 file.txt
+sort -k2,2n file.txt
+```
+
+Pipeline example:
+
+```bash
+grep -v "^#" Mus_musculus.GRCm38.75_chrl.gtf | cut -f3 | sort | uniq -c
+```
+
+---
+
+## 10. Joining Files
+
+```bash
+sort -k1,1 example.bed > example_sorted.bed
+join -1 1 -2 1 example_sorted.bed example_lengths.txt > example_join.bed
+```
+
+This operation joins genomic intervals with chromosome length information using a shared key.
+
+---
+
+## 11. Reproducible and Robust Research Practices
+
+### Reproducible research
 
 * Share code and data
 * Record software and data versions
 * Maintain metadata
 * Document workflows clearly
 
-### Robust Research
+### Robust research
 
 * Write readable, modular code
-* Use consistent naming conventions
 * Automate repetitive tasks
+* Use consistent naming conventions
 * Treat raw data as read-only
 * Use README files as project manuals
 
@@ -233,4 +336,4 @@ These commands are commonly used to quantify features, reads, or records in geno
 
 ## Conclusion
 
-Unix command-line tools form the backbone of modern bioinformatics workflows. This repository serves as a documented reference for foundational Unix concepts and demonstrates how they support reproducible and robust genomic data analysis.
+This repository serves as a structured record of Unix, Git, and bioinformatics command-line concepts learned during the STCC course. The documented practices form the foundation for reproducible, scalable, and robust computational biology workflows.
